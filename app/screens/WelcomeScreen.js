@@ -1,9 +1,17 @@
 import React from "react";
-import { Image, ImageBackground, StyleSheet, View, Text } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+} from "react-native";
+import { CommonActions } from "@react-navigation/native";
 
 import colors from "../config/colors";
 
-function WelcomeScreen(props) {
+function WelcomeScreen({ navigation }) {
   return (
     <View style={styles.background}>
       <View style={styles.logoContainer}>
@@ -13,9 +21,19 @@ function WelcomeScreen(props) {
         />
         <Text>Pray and with the scriptures</Text>
       </View>
-      <View style={styles.startBtn}>
+      <TouchableOpacity
+        style={styles.startBtn}
+        onPress={() => {
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: "TabNavigator" }],
+            })
+          );
+        }}
+      >
         <Text style={styles.btnText}>Explore</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }

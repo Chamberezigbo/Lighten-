@@ -1,15 +1,15 @@
 import React from "react";
-import { TextInput, View, Text, StyleSheet } from "react-native";
+import { Text, TextInput, View, StyleSheet } from "react-native";
 
 import colors from "../config/colors";
 
-function SearchScripture({}) {
+function SearchScreenPrayerPoint() {
   return (
     <View style={styles.container}>
-      <Text style={styles.Text}>Search for your bible verses</Text>
+      <Text style={styles.text}>Search Prayer Points</Text>
       <TextInput
         style={styles.SearchInput}
-        placeholder="Search bible with keywords lke"
+        placeholder="Organize your prayer with scripture"
         type="text"
       />
     </View>
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  Text: {
+  text: {
     fontSize: 20,
     marginBottom: 20,
   },
@@ -37,4 +37,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchScripture;
+export default SearchScreenPrayerPoint;
