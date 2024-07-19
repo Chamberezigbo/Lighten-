@@ -19,7 +19,7 @@ function WelcomeScreen({ navigation }) {
           source={require("../assets/background.jpg")}
           style={styles.logo}
         />
-        <Text>Pray and with the scriptures</Text>
+        <Text style={styles.Text}>Search, Pray with Lighten</Text>
       </View>
       <TouchableOpacity
         style={styles.startBtn}
@@ -44,6 +44,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     width: "100%",
     height: "100%",
+    alignItems: "center",
   },
   startBtn: {
     width: "90%",
@@ -51,10 +52,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#fc5c65",
     alignItems: "center",
     marginBottom: 50,
-    // add borde to it//
     borderRadius: 30,
     alignSelf: "center",
     backgroundColor: colors.primary,
+  },
+  Text: {
+    fontSize: 20,
+    marginTop: 10,
   },
   btnText: {
     alignItems: "center",
@@ -66,7 +70,6 @@ const styles = StyleSheet.create({
   logoContainer: {
     position: "absolute",
     top: 70,
-    left: 100,
     alignItems: "center",
   },
   logo: {
