@@ -20,6 +20,7 @@ import Markdown from "react-native-markdown-display";
 import colors from "../config/colors";
 import API_CONFIG from "../config/api";
 import { color } from "react-native-elements/dist/helpers";
+import ModalComponent from "../Component/ModalComponent";
 
 function SearchScripture() {
   const [keyword, setKeyword] = useState("");
@@ -54,6 +55,7 @@ function SearchScripture() {
 
     Keyboard.dismiss();
     setLoading(true);
+    setResults("");
 
     try {
       const response = await axios.post(
@@ -66,7 +68,6 @@ function SearchScripture() {
           headers: API_CONFIG.headers,
         }
       );
-      console.log(response.data);
       setResults(response.data.text);
     } catch (error) {
       API_CONFIG.errorHandler(error);
@@ -96,7 +97,6 @@ function SearchScripture() {
           <TextInput
             style={styles.SearchInput}
             placeholder="Search bible with keywords"
-            returnKeyType="search"
             value={keyword}
             onChangeText={(text) => {
               if (validateInput(text)) {
@@ -152,18 +152,11 @@ function SearchScripture() {
         <Dialog.Button label="Cancel" onPress={() => setDialogVisible(false)} />
       </Dialog.Container>
 
-      <Modal
+      <ModalComponent
         visible={!!selectedScript}
-        onRequestClose={() => setSelectedScript(null)}
-        animationType="slide"
-      >
-        <View style={styles.modalContent}>
-          <ScrollView>
-            <Markdown>{selectedScript}</Markdown>
-          </ScrollView>
-          <Button title="Close" onPress={() => setSelectedScript(null)} />
-        </View>
-      </Modal>
+        content={selectedScript}
+        onClose={() => setSelectedScript(null)}
+      />
     </View>
   );
 }
@@ -220,13 +213,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginTop: 10,
-  },
-  modalContent: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    marginTop: "10%",
   },
   SearchBtn: {
     marginTop: 5,

@@ -15,7 +15,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <stack.Navigator initialRouteName="WelcomeScreen">
-        <stack.Screen name="Welcome" component={WelcomeScreen} />
+        <stack.Screen name="LightIn" component={WelcomeScreen} />
         <stack.Screen
           name="TabNavigator"
           component={TabNavigator}

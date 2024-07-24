@@ -18,6 +18,7 @@ import Markdown from "react-native-markdown-display";
 
 import colors from "../config/colors";
 import API_CONFIG from "../config/api";
+import ModalComponent from "../Component/ModalComponent";
 
 function SearchScreenPrayerPoint() {
   const [keyword, setKeyword] = useState("");
@@ -39,6 +40,7 @@ function SearchScreenPrayerPoint() {
 
     Keyboard.dismiss();
     setLoading(true);
+    setResults("");
 
     try {
       const response = await axios.post(
@@ -50,7 +52,6 @@ function SearchScreenPrayerPoint() {
           headers: API_CONFIG.headers,
         }
       );
-      console.log(response.data);
       setResults(response.data.text);
     } catch (error) {
       API_CONFIG.errorHandler(error);
@@ -65,7 +66,6 @@ function SearchScreenPrayerPoint() {
       <TextInput
         style={styles.SearchInput}
         placeholder="Organize your prayer with scripture"
-        returnKeyType="search"
         value={keyword}
         onChangeText={(text) => {
           if (validateInput(text)) {
@@ -96,18 +96,11 @@ function SearchScreenPrayerPoint() {
         </TouchableOpacity>
       )}
 
-      <Modal
+      <ModalComponent
         visible={!!selectedScript}
-        animationType="slide"
-        onRequestClose={() => setSelectedScript(null)}
-      >
-        <View style={styles.modalContent}>
-          <ScrollView>
-            <Markdown>{selectedScript}</Markdown>
-          </ScrollView>
-          <Button title="Close" onPress={() => setSelectedScript(null)} />
-        </View>
-      </Modal>
+        content={selectedScript}
+        onClose={() => setSelectedScript(null)}
+      />
     </View>
   );
 }
