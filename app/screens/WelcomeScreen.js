@@ -64,7 +64,7 @@ function WelcomeScreen({ navigation }) {
                 styles.cardImage2,
                 { transform: [{ scale: bounceValue }] },
               ]}
-              source={require("../assets/image9.jpg")}
+              source={require("../assets/image1.jpg")}
             />
           </View>
         </View>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 70,
     backgroundColor: colors.light,
-    height: "30%",
+    height: "35%",
     width: "100%",
     borderRadius: 30,
     borderColor: colors.primary,
@@ -136,6 +136,7 @@ const styles = StyleSheet.create({
   },
   subText: {
     marginTop: 20,
+    marginBottom: 10,
   },
   cardImageContainer: {
     flexDirection: "row",
