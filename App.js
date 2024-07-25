@@ -5,8 +5,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import * as SplashScreen from "expo-splash-screen";
 import axios from "axios";
-// import * as Font from "expo-font";
-// import Entypo from "@expo/vector-icons/Entypo";
+import * as Font from "expo-font";
+import Entypo from "@expo/vector-icons/Entypo";
 
 import WelcomeScreen from "./app/screens/WelcomeScreen";
 import TabNavigator from "./app/screens/TabNavigator";
@@ -21,6 +21,9 @@ export default function App() {
   useEffect(() => {
     async function prepare() {
       try {
+        // Pre-load fonts, make any API calls you need to do here
+        await Font.loadAsync(Entypo.font);
+
         // Make the request to the /warmup endpoint
         await axios.get(`${API_CONFIG.url}/warmup`);
         await new Promise((resolve) => setTimeout(resolve, 4000));
