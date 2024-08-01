@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "lighten",
-    "slug": "lighten",
+    "name": "lightIn",
+    "slug": "lightIn",
+    "description": "LightIn is a transformative mobile app designed to enhance your spiritual journey and personal reflection. With LightIn, you can seamlessly search for and explore inspiring scriptures and prayer points that resonate with your daily life.",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
