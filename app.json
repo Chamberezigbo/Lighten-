@@ -18,7 +18,14 @@
       "adaptiveIcon": {
         "foregroundImage": "./app/assets/play_store_512.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "keystore": {
+        "keystorePath": "./my-release-key.keystore",
+        "keystorePassword": "nmesoma5050",
+        "keyAlias": "my-key-alias",
+        "keyPassword": "nmesoma5050"
+      },
+      "package": "com.chamberezigbo.lightIn"
     },
     "web": {
       "favicon": "./assets/favicon.png"
