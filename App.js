@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as SplashScreen from "expo-splash-screen";
 import axios from "axios";
 import * as Font from "expo-font";
@@ -48,19 +49,21 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <stack.Navigator
-        initialRouteName="WelcomeScreen"
-        onLayout={onLayoutRootView}
-      >
-        <stack.Screen name="LightIn" component={WelcomeScreen} />
-        <stack.Screen
-          name="TabNavigator"
-          component={TabNavigator}
-          options={{ headerShown: false }}
-        />
-      </stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer>
+        <stack.Navigator
+          initialRouteName="WelcomeScreen"
+          onLayout={onLayoutRootView}
+        >
+          <stack.Screen name="LightIn" component={WelcomeScreen} />
+          <stack.Screen
+            name="TabNavigator"
+            component={TabNavigator}
+            options={{ headerShown: false }}
+          />
+        </stack.Navigator>
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 

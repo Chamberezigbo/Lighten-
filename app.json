@@ -7,12 +7,9 @@
     "orientation": "portrait",
     "icon": "./app/assets/icon.png",
     "userInterfaceStyle": "light",
-    "splash": {
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.chamberezigbo.lightIn"
     },
     "android": {
       "adaptiveIcon": {
@@ -20,10 +17,10 @@
         "backgroundColor": "#ffffff"
       },
       "keystore": {
-        "keystorePath": "./my-release-key.keystore",
+        "keystorePath": "./my-light-key.keystore",
+        "keystoreAlias": "my-app-alias",
         "keystorePassword": "nmesoma5050",
-        "keyAlias": "my-key-alias",
-        "keyPassword": "nmesoma5050"
+        "keyAliasPassword": "nmesoma5050"
       },
       "package": "com.chamberezigbo.lightIn"
     },
