@@ -1,27 +1,29 @@
 {
   "expo": {
-    "name": "LightIn1",
-    "slug": "LightIn1",
-    "version": "1.0.0",
+    "name": "LightIn",
+    "slug": "LightIn",
+    "description": "LightIn is a transformative mobile app designed to enhance your spiritual journey and personal reflection. With LightIn, you can seamlessly search for and explore inspiring scriptures and prayer points that resonate with your daily life.",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "userInterfaceStyle": "LightIn",
     "ios": {
       "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/play_store_512.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.chamberezigbo.lightIn"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0d8dc393-38d3-411a-a886-0ea4f0d6375b"
+      }
     }
   }
 }
