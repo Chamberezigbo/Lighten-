@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Entypo, MaterialCommunityIcons } from "@expo/vector-icons";
 import SearchScripture from "./SearchScripture";
 import SearchScreenPrayerPoint from "./SearchScreenPrayerPoint";
+import colors from "../config/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ function TabNavigator() {
             );
           }
         },
-        tabBarActiveTintColor: "tomato",
+        tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: "gray",
       })}
     >

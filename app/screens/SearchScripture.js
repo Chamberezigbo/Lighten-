@@ -9,17 +9,14 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   Keyboard,
-  ScrollView,
   Modal,
 } from "react-native";
 import axios from "axios";
-import Dialog from "react-native-dialog";
 import { Card } from "react-native-elements";
 import Markdown from "react-native-markdown-display";
 
 import colors from "../config/colors";
 import API_CONFIG from "../config/api";
-import { color } from "react-native-elements/dist/helpers";
 import ModalComponent from "../Component/ModalComponent";
 
 function SearchScripture() {
@@ -27,7 +24,7 @@ function SearchScripture() {
   const [numScript, setNumScript] = useState(1);
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState("");
-  const [dialogVisible, setDialogVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [selectedScript, setSelectedScript] = useState(null);
   const [selectedScripts, setSelectedScripts] = useState({
     1: true,
@@ -42,11 +39,8 @@ function SearchScripture() {
     10: false,
   });
 
-  const validateInput = (text) => {
-    // Regular expression to allow only letters
-    const regex = /^[a-zA-Z\s]*$/;
-    return regex.test(text);
-  };
+  const validateInput = (text) => /^[a-zA-Z\s]*$/.test(text);
+
   const handleSearch = async () => {
     if (!keyword) {
       Alert.alert("Please enter the keyword");
@@ -60,15 +54,10 @@ function SearchScripture() {
     try {
       const response = await axios.post(
         `${API_CONFIG.url}/scriptures`,
-        {
-          keyword: keyword,
-          numScripts: numScript,
-        },
-        {
-          headers: API_CONFIG.headers,
-        }
+        { keyword, numScripts: numScript },
+        { headers: API_CONFIG.headers }
       );
-      setResults(response.data.text);
+      setResults(response.data.text || "No results found.");
     } catch (error) {
       API_CONFIG.errorHandler(error);
     } finally {
@@ -79,46 +68,73 @@ function SearchScripture() {
   const handleSwitchChange = (scriptNum) => {
     setSelectedScripts((prev) => {
       const newSelectedScripts = { ...prev };
-      for (const key in newSelectedScripts) {
-        newSelectedScripts[key] = false;
-      }
+      for (const key in newSelectedScripts) newSelectedScripts[key] = false;
       newSelectedScripts[scriptNum] = true;
       setNumScript(scriptNum);
       return newSelectedScripts;
     });
-    setDialogVisible(false);
+    setModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.Text}>Search for your bible verses</Text>
+      <Text style={styles.titleText}>Search for your bible verses</Text>
       <View style={styles.inputContainer}>
-        <View style={styles.SearchContainer}>
-          <TextInput
-            style={styles.SearchInput}
-            placeholder="Search bible with keywords"
-            value={keyword}
-            onChangeText={(text) => {
-              if (validateInput(text)) {
-                setKeyword(text);
-              } else {
-                Alert.alert("Invalid input", "Please enter only letters.");
-              }
-            }}
-            onSubmitEditing={handleSearch}
-          />
-
-          <View style={styles.SearchBtn}>
-            <Button title="Search" onPress={handleSearch} />
-          </View>
-        </View>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search bible with keywords"
+          value={keyword}
+          onChangeText={(text) => {
+            if (validateInput(text)) {
+              setKeyword(text);
+            } else {
+              Alert.alert("Invalid input", "Please enter only letters.");
+            }
+          }}
+          onSubmitEditing={handleSearch}
+        />
 
         <TouchableOpacity
           style={styles.pickerContainer}
-          onPress={() => setDialogVisible(true)}
+          onPress={() => setModalVisible(true)}
         >
           <Text style={styles.pickerText}>{numScript}</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.suggestionWrapper}>
+        <View style={styles.suggestionRow}>
+          <TouchableOpacity
+            style={styles.suggestionContainer}
+            onPress={() => setKeyword("Faith")}
+          >
+            <Text style={styles.suggestionText}>Faith</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.suggestionContainer}
+            onPress={() => setKeyword("Grace")}
+          >
+            <Text style={styles.suggestionText}>Grace</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.suggestionContainer}
+            onPress={() => setKeyword("Love")}
+          >
+            <Text style={styles.suggestionText}>Love</Text>
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          style={styles.longSuggestionContainer}
+          onPress={() => setKeyword("Verses on patience and understanding")}
+        >
+          <Text style={styles.suggestionText}>
+            Verses on patience and understanding
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.searchButtonContainer}>
+        <Button title="Search" onPress={handleSearch} />
       </View>
 
       {loading && <ActivityIndicator size="large" color={colors.primary} />}
@@ -133,24 +149,41 @@ function SearchScripture() {
                 body: { maxHeight: 100, overflow: "hidden", fontSize: 16 },
               }}
             >
-              {results || "No results available"}
+              {results}
             </Markdown>
           </Card>
         </TouchableOpacity>
       )}
 
-      <Dialog.Container visible={dialogVisible}>
-        <Dialog.Title>Select Number of Scriptures</Dialog.Title>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
-          <Dialog.Switch
-            key={value}
-            label={`${value}`}
-            value={selectedScripts[value]}
-            onValueChange={() => handleSwitchChange(value)}
-          />
-        ))}
-        <Dialog.Button label="Cancel" onPress={() => setDialogVisible(false)} />
-      </Dialog.Container>
+      <Modal
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <Text style={styles.modalTitle}>Select Number of Scriptures</Text>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((value) => (
+              <TouchableOpacity
+                key={value}
+                style={styles.optionButton}
+                onPress={() => handleSwitchChange(value)}
+              >
+                <Text
+                  style={
+                    selectedScripts[value]
+                      ? styles.selectedOptionText
+                      : styles.optionText
+                  }
+                >
+                  {value}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <Button title="Cancel" onPress={() => setModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
 
       <ModalComponent
         visible={!!selectedScript}
@@ -168,58 +201,106 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
   },
-  Text: {
+  titleText: {
     fontSize: 20,
     marginBottom: 20,
   },
   inputContainer: {
     flexDirection: "row",
-    alignItems: "flex-start",
+    alignItems: "center",
     marginBottom: 10,
   },
-  SearchInput: {
-    width: "100%",
+  searchInput: {
+    flex: 1,
     height: 50,
     borderColor: colors.primary,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 8,
     paddingLeft: 10,
   },
   pickerContainer: {
-    width: "15%",
+    width: 50,
     height: 50,
     borderColor: colors.primary,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 25,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    marginLeft: 5,
-  },
-  SearchContainer: {
-    width: "70%",
+    marginLeft: 10,
   },
   pickerText: {
     fontSize: 16,
+    color: colors.primary,
   },
-  resultsContainer: {
-    marginTop: 20,
+  suggestionWrapper: {
+    marginTop: 5,
+    marginBottom: 10,
     width: "100%",
   },
-  result: {
-    marginBottom: 10,
-    padding: 10,
-    borderColor: colors.primary,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginTop: 10,
+  suggestionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  SearchBtn: {
-    marginTop: 5,
-    borderRadius: 30,
+  suggestionContainer: {
+    backgroundColor: colors.black,
+    borderRadius: 8,
+    padding: 8,
+    width: "30%",
+    alignItems: "center",
+  },
+  longSuggestionContainer: {
+    backgroundColor: colors.black,
+    borderRadius: 8,
+    padding: 8,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  suggestionText: {
+    fontSize: 14,
+    color: colors.light,
+    textAlign: "center",
+  },
+  searchButtonContainer: {
     alignSelf: "center",
     width: "50%",
-    borderColor: colors.primary,
+    marginVertical: 10,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.5)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalTitle: {
+    fontSize: 18,
+    marginBottom: 10,
+    fontWeight: "bold",
+  },
+  optionButton: {
+    padding: 10,
+    marginVertical: 5,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: colors.light,
+    borderRadius: 5,
+  },
+  optionText: {
+    fontSize: 16,
+    color: "black",
+  },
+  selectedOptionText: {
+    fontSize: 16,
+    color: colors.primary,
+    fontWeight: "bold",
   },
 });
+
 export default SearchScripture;

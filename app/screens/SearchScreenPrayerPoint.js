@@ -5,12 +5,10 @@ import {
   View,
   StyleSheet,
   Button,
-  ScrollView,
   TouchableOpacity,
-  Modal,
-  Keyboard,
   ActivityIndicator,
   Alert,
+  Keyboard,
 } from "react-native";
 import axios from "axios";
 import { Card } from "react-native-elements";
@@ -26,11 +24,7 @@ function SearchScreenPrayerPoint() {
   const [results, setResults] = useState("");
   const [selectedScript, setSelectedScript] = useState(null);
 
-  const validateInput = (text) => {
-    // Regular expression to allow only letters
-    const regex = /^[a-zA-Z\s]*$/;
-    return regex.test(text);
-  };
+  const validateInput = (text) => /^[a-zA-Z\s]*$/.test(text);
 
   const handleSearch = async () => {
     if (!keyword) {
@@ -45,14 +39,10 @@ function SearchScreenPrayerPoint() {
     try {
       const response = await axios.post(
         `${API_CONFIG.url}/prayer-points`,
-        {
-          keyword: keyword,
-        },
-        {
-          headers: API_CONFIG.headers,
-        }
+        { keyword },
+        { headers: API_CONFIG.headers }
       );
-      setResults(response.data.text);
+      setResults(response.data.text || "No results found.");
     } catch (error) {
       API_CONFIG.errorHandler(error);
     } finally {
@@ -76,6 +66,43 @@ function SearchScreenPrayerPoint() {
         }}
       />
 
+      <View style={styles.suggestionWrapper}>
+        <View style={styles.suggestionRow}>
+          <TouchableOpacity
+            style={styles.suggestionContainer}
+            onPress={() => setKeyword("Healing")}
+          >
+            <Text style={styles.suggestionText}>Healing</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.suggestionContainer}
+            onPress={() => setKeyword("Protection")}
+          >
+            <Text style={styles.suggestionText}>Protection</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.suggestionContainer}
+            onPress={() => setKeyword("Wisdom")}
+          >
+            <Text style={styles.suggestionText}>Wisdom</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.longSuggestionContainer}>
+          <TouchableOpacity
+            onPress={() =>
+              setKeyword(
+                "For breakthroughs that help overcome difficult financial situations"
+              )
+            }
+          >
+            <Text style={styles.suggestionText}>
+              For breakthroughs that help overcome difficult financial
+              situations
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
       <Button title="Search" onPress={handleSearch} />
 
       {loading && <ActivityIndicator size="large" colors={colors.primary} />}
@@ -83,14 +110,14 @@ function SearchScreenPrayerPoint() {
       {results && (
         <TouchableOpacity onPress={() => setSelectedScript(results)}>
           <Card>
-            <Card.Title>Scripture Results</Card.Title>
+            <Card.Title>Prayer Point Results</Card.Title>
             <Card.Divider />
             <Markdown
               style={{
                 body: { maxHeight: 100, overflow: "hidden", fontSize: 16 },
               }}
             >
-              {results || "No results available"}
+              {results}
             </Markdown>
           </Card>
         </TouchableOpacity>
@@ -121,27 +148,36 @@ const styles = StyleSheet.create({
     height: 50,
     borderColor: colors.primary,
     borderWidth: 1,
-    borderRadius: 20,
+    borderRadius: 8,
     paddingLeft: 10,
   },
-  resultsContainer: {
-    marginTop: 20,
+  suggestionWrapper: {
+    marginTop: 5,
+    marginBottom: 10,
     width: "100%",
   },
-  result: {
-    marginBottom: 10,
-    padding: 10,
-    borderColor: colors.primary,
-    borderWidth: 1,
-    borderRadius: 10,
-    marginTop: 10,
+  suggestionRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
-  modalContent: {
-    flex: 1,
-    justifyContent: "center",
+  suggestionContainer: {
+    backgroundColor: colors.black,
+    borderRadius: 8,
+    padding: 8,
+    width: "30%",
     alignItems: "center",
-    padding: 20,
-    marginTop: "10%",
+  },
+  longSuggestionContainer: {
+    backgroundColor: colors.black,
+    borderRadius: 8,
+    padding: 8,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  suggestionText: {
+    fontSize: 14,
+    color: colors.light,
+    textAlign: "center",
   },
 });
 

@@ -8,7 +8,6 @@ import * as SplashScreen from "expo-splash-screen";
 import axios from "axios";
 import * as Font from "expo-font";
 import Entypo from "@expo/vector-icons/Entypo";
-
 import WelcomeScreen from "./app/screens/WelcomeScreen";
 import TabNavigator from "./app/screens/TabNavigator";
 import CustomSplashScreen from "./app/Component/CustomSplashScreen";
@@ -18,32 +17,47 @@ const stack = createStackNavigator();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
 
   useEffect(() => {
-    async function prepare() {
+    // Start loading the app's required resources (fonts) in parallel with other tasks
+    async function loadResources() {
       try {
-        // Pre-load fonts, make any API calls you need to do here
+        // Load fonts asynchronously
         await Font.loadAsync(Entypo.font);
-
-        // Make the request to the /warmup endpoint
-        await axios.get(`${API_CONFIG.url}/warmup`);
+        setFontsLoaded(true);
       } catch (error) {
-        console.warn(error);
-      } finally {
-        setAppIsReady(true);
+        console.warn("Error loading fonts:", error);
       }
     }
 
-    prepare();
+    loadResources(); // Start loading fonts
   }, []);
+
+  useEffect(() => {
+    function prepareApp() {
+      // Make the API call without awaiting it to avoid blocking
+      axios.get(`${API_CONFIG.url}/warmup`).catch((error) => {
+        console.warn("API Warmup failed:", error);
+      });
+
+      // Immediately mark the app as ready, so we can proceed
+      setAppIsReady(true);
+    }
+
+    // Only trigger the API call after the UI is ready
+    if (fontsLoaded) {
+      prepareApp();
+    }
+  }, [fontsLoaded]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
-      await SplashScreen.hideAsync();
+      await SplashScreen.hideAsync(); // Hide splash screen once everything is ready
     }
   }, [appIsReady]);
 
-  if (!appIsReady) {
+  if (!appIsReady || !fontsLoaded) {
     return <CustomSplashScreen />;
   }
 
