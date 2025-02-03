@@ -3,7 +3,7 @@
     "name": "LightIn",
     "slug": "LightIn",
     "description": "LightIn is a transformative mobile app designed to enhance your spiritual journey and personal reflection. With LightIn, you can seamlessly search for and explore inspiring scriptures and prayer points that resonate with your daily life.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "LightIn",

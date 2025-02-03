@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextInput,
   View,
@@ -13,7 +13,6 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Card } from "react-native-elements";
-import Markdown from "react-native-markdown-display";
 
 import colors from "../config/colors";
 import API_CONFIG from "../config/api";
@@ -57,7 +56,9 @@ function SearchScripture() {
         { keyword, numScripts: numScript },
         { headers: API_CONFIG.headers }
       );
-      setResults(response.data.text || "No results found.");
+      setResults(
+        response.data.text.replace(/\. /g, ".\n") || "No results found."
+      );
     } catch (error) {
       API_CONFIG.errorHandler(error);
     } finally {
@@ -144,13 +145,13 @@ function SearchScripture() {
           <Card>
             <Card.Title>Scripture Results</Card.Title>
             <Card.Divider />
-            <Markdown
-              style={{
-                body: { maxHeight: 100, overflow: "hidden", fontSize: 16 },
-              }}
-            >
-              {results}
-            </Markdown>
+            <View style={{ maxHeight: 100, overflow: "hidden" }}>
+              {results.split("\n").map((line, index) => (
+                <Text key={index} style={{ fontSize: 16, marginBottom: 5 }}>
+                  {line}
+                </Text>
+              ))}
+            </View>
           </Card>
         </TouchableOpacity>
       )}
