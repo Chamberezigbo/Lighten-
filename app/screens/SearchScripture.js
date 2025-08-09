@@ -18,7 +18,7 @@ import colors from "../config/colors";
 import API_CONFIG from "../config/api";
 import ModalComponent from "../Component/ModalComponent";
 
-function SearchScripture() {
+function SearchScripture({bibleVersion}) {
   const [keyword, setKeyword] = useState("");
   const [numScript, setNumScript] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -41,11 +41,12 @@ function SearchScripture() {
   const validateInput = (text) => /^[a-zA-Z\s]*$/.test(text);
 
   const handleSearch = async () => {
+    keyword.trim();
     if (!keyword) {
       Alert.alert("Please enter the keyword");
       return;
     }
-
+    
     Keyboard.dismiss();
     setLoading(true);
     setResults("");
@@ -53,7 +54,7 @@ function SearchScripture() {
     try {
       const response = await axios.post(
         `${API_CONFIG.url}/scriptures`,
-        { keyword, numScripts: numScript },
+        { keyword, numScripts: numScript, version: bibleVersion },
         { headers: API_CONFIG.headers }
       );
       setResults(
@@ -81,19 +82,13 @@ function SearchScripture() {
     <View style={styles.container}>
       <Text style={styles.titleText}>Search for your bible verses</Text>
       <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search bible with keywords"
-          value={keyword}
-          onChangeText={(text) => {
-            if (validateInput(text)) {
-              setKeyword(text);
-            } else {
-              Alert.alert("Invalid input", "Please enter only letters.");
-            }
-          }}
-          onSubmitEditing={handleSearch}
-        />
+      <TextInput
+        style={styles.searchInput}
+        placeholder="Search bible with keywords"
+        value={keyword}
+        onChangeText={setKeyword}
+        onSubmitEditing={handleSearch}
+      />
 
         <TouchableOpacity
           style={styles.pickerContainer}

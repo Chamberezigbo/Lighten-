@@ -12,6 +12,8 @@ import WelcomeScreen from "./app/screens/WelcomeScreen";
 import TabNavigator from "./app/screens/TabNavigator";
 import CustomSplashScreen from "./app/Component/CustomSplashScreen";
 import API_CONFIG from "./app/config/api";
+import NetworkNotice from "./app/screens/NetworkNotice";
+import { checkAppVersion } from "./app/Component/versionCheck";
 
 const stack = createStackNavigator();
 
@@ -35,7 +37,9 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    function prepareApp() {
+    async function prepareApp() {
+
+      await checkAppVersion();
       // Make the API call without awaiting it to avoid blocking
       axios.get(`${API_CONFIG.url}/warmup`).catch((error) => {
         console.warn("API Warmup failed:", error);
@@ -64,6 +68,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <NavigationContainer>
+      <View style={{ flex: 1 }}>
         <stack.Navigator
           initialRouteName="WelcomeScreen"
           onLayout={onLayoutRootView}
@@ -75,6 +80,10 @@ export default function App() {
             options={{ headerShown: false }}
           />
         </stack.Navigator>
+
+        {/* Network Error Screen */}
+        <NetworkNotice/>
+        </View>
       </NavigationContainer>
     </GestureHandlerRootView>
   );

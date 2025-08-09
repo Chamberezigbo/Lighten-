@@ -18,7 +18,7 @@ import colors from "../config/colors";
 import API_CONFIG from "../config/api";
 import ModalComponent from "../Component/ModalComponent";
 
-function SearchScreenPrayerPoint() {
+function SearchScreenPrayerPoint({bibleVersion}) {
   const [keyword, setKeyword] = useState("");
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState("");
@@ -39,7 +39,7 @@ function SearchScreenPrayerPoint() {
     try {
       const response = await axios.post(
         `${API_CONFIG.url}/prayer-points`,
-        { keyword },
+        { keyword,version: bibleVersion },
         { headers: API_CONFIG.headers }
       );
       setResults(response.data.text || "No results found.");
@@ -91,13 +91,12 @@ function SearchScreenPrayerPoint() {
           <TouchableOpacity
             onPress={() =>
               setKeyword(
-                "For breakthroughs that help overcome difficult financial situations"
+                "For solutions to overcome difficult financial situations"
               )
             }
           >
             <Text style={styles.suggestionText}>
-              For breakthroughs that help overcome difficult financial
-              situations
+              For solutions to overcome difficult financial situations
             </Text>
           </TouchableOpacity>
         </View>
