@@ -118,7 +118,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 12,
     paddingVertical: 8,
-    marginTop:60,
+    // add platform-safe top margin for Android status bar
+    marginTop: Platform.OS === "android" ? 30 : 60,
   },
   headerTitle: {
     fontSize: 18,
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 8,
     // add platform-safe top margin for Android status bar
-    marginTop: Platform.OS === "android" ? 40 : 0,
+    // marginTop: Platform.OS === "android" ? 10 : 0,
   },
 });
 
